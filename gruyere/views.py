@@ -10,6 +10,13 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            cursor = connection.cursor()
+            query = "SELECT COUNT(*) FROM auth_user WHERE username = '%s' AND password = '%s'" % \
+                    (username, password)
+            cursor.execute(query)
+            result = cursor.fetchone()[0]
             if result:
                 return HttpResponseRedirect('/main/')
             return HttpResponseRedirect('/')
